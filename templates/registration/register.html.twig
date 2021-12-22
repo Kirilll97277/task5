@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+{{ form_start(registrationForm) }}
+<div class="form-login">
+    <main class="form-signin">
+        <h1 class="h3 mb-3 fw-normal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ title }}</font></font></h1>
+        <div class="form-group">
+            {{ form_errors(registrationForm.user_name) }}
+            <div class="col-sm-12">
+                {{ form_widget(registrationForm.user_name, {'attr': {'class': 'form-control','placeholder ':'Enter your name'} }) }}
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            {{ form_errors(registrationForm.email) }}
+            <div class="col-sm-12">
+                {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control','placeholder ':'Enter your email'} }) }}
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            {{ form_errors(registrationForm.plainPassword) }}
+            <div class="col-sm-12">
+                {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control','placeholder ':'Enter your password'} }) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12 mt-2">
+                {{ form_label(registrationForm.save) }}
+                {{ form_widget(registrationForm.save, { 'attr': {'class': 'w-100 btn btn-lg btn-primary'} }) }}
+                <a href="{{ path('app_login') }}">Have an account? Log in!</a>
+            </div>
+        </div>
+    </main>
+</div>
+    {{ form_end(registrationForm) }}
+{% endblock %}

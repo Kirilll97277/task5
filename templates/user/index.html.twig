@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Task4{% endblock %}
+
+{% block body %}
+    <style>
+        td,th {
+            border: 1px black solid;
+        }
+        tr td:first-child {
+            width: 15%;
+        }
+    </style>
+    <div class="container">
+        <h2>Список пользователей</h2>
+        <table style="border: 1px black solid; width: 100%">
+            <tr>
+                <th><input type="checkbox" id="check_all" ><label for="check_all">Check all</label> </th>
+                <th>Id</th>
+                <th>Email</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td><input type="checkbox" id="user_id_{{ user.id }}" name="user_id_change_checkbox" value="{{ user.id }}"><label for="user_id_{{ user.id }}"></label></td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button class="btn-primary mt-2" id="block_users">Delete</button>
+    </div>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script>
+        //select all
+        $('body').on('change', '#check_all', function () {
+            $('[name="user_id_change_checkbox"]').prop('checked', $(this).is(':checked'));
+        });
+        //update select all in case of checked checkboxes
+        $('body').on('change', '[name="user_id_change_checkbox"]', function () {
+            $('#check_all').prop('checked', $('[name="user_id_change_checkbox"]').length ===  $('[name="user_id_change_checkbox"]:checked').length);
+        });
+        //on button click action
+        $('#block_users').click(function (){
+            let ids = [];
+            // cбор ид
+            $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
+                ids.push($(this).val());
+            });
+            //отправка на сервер
+            $.ajax({
+                url: '{{ path('user_block') }}',
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({'ids' : ids}),
+                success: function (data) {
+                    if (JSON.parse(data).success) {
+                        $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').html('');
+                    }
+                },
+            });
+        });
+    </script>
+{% endblock %}
