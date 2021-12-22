@@ -28,6 +28,8 @@
             {% endfor %}
         </table>
         <button class="btn-primary mt-2" id="block_users">Delete</button>
+        <button class="btn-primary mt-2" id="block_users">Block</button>
+        <button class="btn-primary mt-2" id="block_users">Unblock</button>
     </div>
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -51,7 +53,7 @@
             });
             //отправка на сервер
             $.ajax({
-                url: '{{ path('user_block') }}',
+                url: '{{ path('user_delete') }}',
                 type: "POST",
                 dataType: "json",
                 data: JSON.stringify({'ids' : ids}),

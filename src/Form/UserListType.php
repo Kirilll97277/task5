@@ -19,7 +19,9 @@ class UserListType extends AbstractType
                 'entry_options' => ['label' => false],
                 'data' => $builder->getOption('userList'),
             ])
-            ->add('submit', SubmitType::class, [])
+            ->add('delete', SubmitType::class, [])
+            ->add('block', SubmitType::class, [])
+            ->add('unblock', SubmitType::class, [])
         ;
     }
 

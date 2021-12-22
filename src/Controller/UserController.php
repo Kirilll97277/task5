@@ -32,22 +32,22 @@ class UserController extends AbstractController
         ));
     }
 
-    #[Route('user/block', name: 'user_block')]
+    #[Route('user/delete', name: 'user_delete')]
     public function blockUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        //$entityManager->remove();
         $ids = json_decode($request->getContent(), true)['ids'];
-        $doctrine = $this->$entityManager;
+        $doctrine = $entityManager;
         $users = $doctrine->getRepository(User::class)->getUsersByIds($ids);
-        try {
-//            foreach ($users as $user) {
-//                $doctrine->getManager()->remove($user);
-//            }
-//            $doctrine->getManager()->flush();
-            return new JsonResponse(json_encode(['success' => true]));
+
+        try{
+            foreach ($users as $user) {
+                $doctrine->remove($user);
             }
-        catch
-        (\Exception $exception)
+            $doctrine->flush();
+
+            return new JsonResponse(json_encode(['success' => true]));
+
+        } catch (\Exception $exception)
         {
             return new JsonResponse(json_encode(['success' => false]));
         }
