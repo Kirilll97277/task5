@@ -33,11 +33,12 @@ class UserController extends AbstractController
     }
 
     #[Route('user/delete', name: 'user_delete')]
-    public function blockUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function deleteUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $ids = json_decode($request->getContent(), true)['ids'];
         $doctrine = $entityManager;
-        $users = $doctrine->getRepository(User::class)->getUsersByIds($ids);
+        $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids])[0];
+        //$users = $doctrine->getRepository(User::class)->getUsersByIds($ids);
 
         try{
             foreach ($users as $user) {

@@ -20,8 +20,8 @@ class UserListType extends AbstractType
                 'data' => $builder->getOption('userList'),
             ])
             ->add('delete', SubmitType::class, [])
-            ->add('block', SubmitType::class, [])
-            ->add('unblock', SubmitType::class, [])
+            /*->add('block', SubmitType::class, [])
+            ->add('unblock', SubmitType::class, [])*/
         ;
     }
 
