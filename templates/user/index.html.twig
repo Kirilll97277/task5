@@ -17,19 +17,27 @@
             <tr>
                 <th><input type="checkbox" id="check_all" ><label for="check_all">Check all</label> </th>
                 <th>Id</th>
+                <th>Name</th>
                 <th>Email</th>
+                <th>Registration date</th>
+                <th>date of last visit</th>
+                <th>Active</th>
             </tr>
             {% for user in users %}
                 <tr>
                     <td><input type="checkbox" id="user_id_{{ user.id }}" name="user_id_change_checkbox" value="{{ user.id }}"><label for="user_id_{{ user.id }}"></label></td>
                     <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.UserRegistrationDate }}</td>
+                    <td>{{ user.DataLastVisit }}</td>
+                    <td>{{ user.isActive }}</td>
                 </tr>
             {% endfor %}
         </table>
-        <button class="btn-primary mt-2" id="block_users">Delete</button>
-        <button class="btn-primary mt-2" id="block_users">Block</button>
-        <button class="btn-primary mt-2" id="block_users">Unblock</button>
+        <button class="btn-primary mt-2" id="user_delete">Delete</button>
+        <button class="btn-primary mt-2" id="user_block">Block</button>
+        <button class="btn-primary mt-2" id="user_unblock">Unblock</button>
     </div>
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -45,13 +53,11 @@
             $('#check_all').prop('checked', $('[name="user_id_change_checkbox"]').length ===  $('[name="user_id_change_checkbox"]:checked').length);
         });
         //on button click action
-        $('#block_users').click(function (){
+        $('#user_delete').click(function (){
             let ids = [];
-            // cбор ид
             $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
                 ids.push($(this).val());
             });
-            //отправка на сервер
             $.ajax({
                 url: '{{ path('user_delete') }}',
                 type: "POST",
@@ -62,6 +68,29 @@
                         $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').html('');
                     }
                 },
+            });
+        });
+        $('#user_block').click(function (){
+            let ids = [];
+            $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
+                ids.push($(this).val());
+            });
+            $.ajax({
+                url: '{{ path('user_block') }}',
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({'ids' : ids}),
+            });
+        });$('#user_unblock').click(function (){
+            let ids = [];
+            $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
+                ids.push($(this).val());
+            });
+            $.ajax({
+                url: '{{ path('user_unblock') }}',
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify({'ids' : ids}),
             });
         });
     </script>

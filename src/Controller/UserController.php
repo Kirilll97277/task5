@@ -37,12 +37,53 @@ class UserController extends AbstractController
     {
         $ids = json_decode($request->getContent(), true)['ids'];
         $doctrine = $entityManager;
-        $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids])[0];
-        //$users = $doctrine->getRepository(User::class)->getUsersByIds($ids);
-
+        $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids]);
+        dump($users);
         try{
             foreach ($users as $user) {
                 $doctrine->remove($user);
+            }
+            $doctrine->flush();
+
+            return new JsonResponse(json_encode(['success' => true]));
+
+        } catch (\Exception $exception)
+        {
+            return new JsonResponse(json_encode(['success' => false]));
+        }
+    }
+
+    #[Route('user/block', name: 'user_block')]
+    public function blockUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $ids = json_decode($request->getContent(), true)['ids'];
+        $doctrine = $entityManager;
+        $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids]);
+
+        try{
+            foreach ($users as $user) {
+                $user->setIsActive(false);
+            }
+            $doctrine->flush();
+
+            return new JsonResponse(json_encode(['success' => true]));
+
+        } catch (\Exception $exception)
+        {
+            return new JsonResponse(json_encode(['success' => false]));
+        }
+    }
+
+    #[Route('user/unblock', name: 'user_unblock')]
+    public function unblockUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $ids = json_decode($request->getContent(), true)['ids'];
+        $doctrine = $entityManager;
+        $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids]);
+
+        try{
+            foreach ($users as $user) {
+                $user->setIsActive(true);
             }
             $doctrine->flush();
 
