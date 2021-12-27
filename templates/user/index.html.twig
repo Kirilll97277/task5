@@ -11,6 +11,9 @@
     </style>
     <div class="container">
         <h2>Users</h2>
+        <button class="btn-primary mt-2" id="user_delete">Delete</button>
+        <button class="btn-primary mt-2" id="user_block">Block</button>
+        <button class="btn-primary mt-2" id="user_unblock">Unblock</button>
         <table style="border: 1px black solid; width: 100%">
             <tr>
                 <th><input type="checkbox" id="check_all" ><label for="check_all">Check all</label> </th>
@@ -23,24 +26,22 @@
             </tr>
             {% for user in users %}
                 <tr>
-{#                    {% if ({{ user.isActive }} == true) %}#}
-{#                    <div class="color:red">#}
+
                     <td><input type="checkbox" id="user_id_{{ user.id }}" name="user_id_change_checkbox" value="{{ user.id }}"><label for="user_id_{{ user.id }}"></label></td>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.UserRegistrationDate }}</td>
                     <td>{{ user.DataLastVisit }}</td>
-                    <td>{{ user.isActive }}</td>
-{#                    </div>#}
-{#                    {% else %}#}
-
+                    <td>{% if user.IsActive %}
+                            Active
+                        {% else %}
+                            Banned
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
-        <button class="btn-primary mt-2" id="user_delete">Delete</button>
-        <button class="btn-primary mt-2" id="user_block">Block</button>
-        <button class="btn-primary mt-2" id="user_unblock">Unblock</button>
     </div>
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -85,7 +86,7 @@
                 data: JSON.stringify({'ids' : ids}),
                 success: function (data) {
                     if (JSON.parse(data).success) {
-                        $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr');
+                        $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').find('td:nth-child(7)').text('Banned');
                     }
                 },
             });
@@ -101,7 +102,7 @@
                 data: JSON.stringify({'ids' : ids}),
                 success: function (data) {
                     if (JSON.parse(data).success) {
-                        $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr');
+                        $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').find('td:nth-child(7)').text('Active');
                     }
                 },
             });
