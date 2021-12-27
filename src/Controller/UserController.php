@@ -10,7 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserController extends AbstractController
 {
@@ -33,19 +35,28 @@ class UserController extends AbstractController
     }
 
     #[Route('user/delete', name: 'user_delete')]
-    public function deleteUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
+    public function deleteUsers(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ): JsonResponse {
         $ids = json_decode($request->getContent(), true)['ids'];
         $doctrine = $entityManager;
         $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids]);
-        dump($users);
+        $redirect = false;
         try{
+            if (in_array($this->getUser()->getId(), $ids, false)) {
+                $redirect = true;
+                $request->getSession()->invalidate(0);
+                $tokenStorage->setToken(null);
+            }
+
             foreach ($users as $user) {
                 $doctrine->remove($user);
             }
             $doctrine->flush();
 
-            return new JsonResponse(json_encode(['success' => true]));
+            return new JsonResponse(json_encode(['success' => true, 'redirect' => $redirect]));
 
         } catch (\Exception $exception)
         {
@@ -54,11 +65,21 @@ class UserController extends AbstractController
     }
 
     #[Route('user/block', name: 'user_block')]
-    public function blockUsers(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
+    public function blockUsers(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ): JsonResponse {
         $ids = json_decode($request->getContent(), true)['ids'];
         $doctrine = $entityManager;
         $users = $doctrine->getRepository(User::class)->findBy(['id' => $ids]);
+        $redirect = false;
+
+        if (in_array($this->getUser()->getId(), $ids, false)) {
+            $redirect = true;
+            $request->getSession()->invalidate(0);
+            $tokenStorage->setToken(null);
+        }
 
         try{
             foreach ($users as $user) {
@@ -66,7 +87,7 @@ class UserController extends AbstractController
             }
             $doctrine->flush();
 
-            return new JsonResponse(json_encode(['success' => true]));
+            return new JsonResponse(json_encode(['success' => true, 'redirect' => $redirect]));
 
         } catch (\Exception $exception)
         {

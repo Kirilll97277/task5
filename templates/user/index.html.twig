@@ -68,8 +68,12 @@
                 dataType: "json",
                 data: JSON.stringify({'ids' : ids}),
                 success: function (data) {
-                    if (JSON.parse(data).success) {
+                    let response = JSON.parse(data);
+                    if (response.success) {
                         $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').html('');
+                        if (response.redirect) {
+                            window.location.href = '/';
+                        }
                     }
                 },
             });
@@ -86,8 +90,12 @@
                 dataType: "json",
                 data: JSON.stringify({'ids' : ids}),
                 success: function (data) {
-                    if (JSON.parse(data).success) {
+                    let response = JSON.parse(data);
+                    if (response.success) {
                         $("input:checkbox[name=user_id_change_checkbox]:checked").parents('tr').find('td:nth-child(7)').text('Banned');
+                        if (response.redirect) {
+                            window.location.href = '/';
+                        }
                     }
                 },
             });

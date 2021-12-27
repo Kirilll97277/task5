@@ -18,12 +18,10 @@ class UserChecker implements UserCheckerInterface
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof AppUser) {
-
             return;
         }
 
         if (!$user->getIsActive()) {
-
             throw new CustomUserMessageAccountStatusException('Your user account no longer exists.');
         }
     }
@@ -31,12 +29,10 @@ class UserChecker implements UserCheckerInterface
     public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof AppUser) {
-
             return;
         }
 
         if (!$user->getIsActive()) {
-
             throw new CustomUserMessageAccountStatusException('Your user account no longer exists.');
         }
     }
