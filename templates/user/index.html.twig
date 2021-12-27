@@ -74,6 +74,7 @@
                 },
             });
         });
+
         $('#user_block').click(function (){
             let ids = [];
             $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
@@ -90,7 +91,9 @@
                     }
                 },
             });
-        });$('#user_unblock').click(function (){
+        });
+
+        $('#user_unblock').click(function (){
             let ids = [];
             $("input:checkbox[name=user_id_change_checkbox]:checked").each(function(){
                 ids.push($(this).val());

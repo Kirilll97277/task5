@@ -21,6 +21,11 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    # explicitly configure the service
+    App\Security\UserChecker:
+        class: App\Security\UserChecker
+        arguments:
+            - '@request_stack'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\LoginListener:
